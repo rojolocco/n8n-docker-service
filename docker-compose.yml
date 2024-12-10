@@ -11,9 +11,6 @@ services:
       - n8n_storage_prod:/home/node/.n8n
     networks:
       - caddy_network
-    depends_on:
-      postgres:
-        condition: service_healthy
     deploy:
       resources:
         limits:
