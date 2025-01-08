@@ -1,24 +1,25 @@
 services:
   n8n:
-    image: docker.n8n.io/n8nio/n8n
-    container_name: n8n_prod
+    image: docker.n8n.io/n8nio/n8n:1.72.1
+    container_name: n8n
     restart: always
     env_file:
       - .env.prod
     ports:
       - "5678:5678"
     volumes:
-      - n8n_storage_prod:/home/node/.n8n
+      - n8n_data:/home/node/.n8n
     networks:
       - caddy_network
     deploy:
       resources:
         limits:
-          memory: 512M
-          cpus: "0.5"
+          memory: 1G
+          cpus: "1"
 
 volumes:
-  n8n_storage_prod:
+  n8n_data:
+    driver: local
 
 networks:
   caddy_network:
