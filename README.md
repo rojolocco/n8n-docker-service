@@ -1,152 +1,69 @@
-# Servicio n8n en Producción
+# n8n Workflow Automation
 
-Este directorio contiene la configuración para desplegar **n8n** en un entorno de producción utilizando Docker Compose. **n8n** es una herramienta de automatización de flujos de trabajo que permite conectar diversas aplicaciones y servicios.
+This project provides a Docker setup for running n8n, a powerful workflow automation tool that allows you to connect various services and automate tasks.
 
----
+## Description
 
-## **Estructura de Archivos**
+This repository contains Docker configurations to easily deploy n8n. n8n is an open-source workflow automation tool that enables you to create complex workflows by connecting different services and APIs without writing code.
 
-```plaintext
-n8n/
-├── .env.prod                  # Variables de entorno para producción
-├── docker-compose.yml         # Docker Compose para despliegue en producción
-```
+## Services
 
----
+- **n8n**: The main service that runs the n8n workflow automation tool.
+  - **Container Name**: auto
+  - **Image**: docker.n8n.io/n8nio/n8n
+  - **Ports**: Exposed on port (5678)
+  - **Volumes**: Data is persisted in `n8n_data` volume, mapped to `/home/node/.n8n`
+  - **Environment Variables**: Loaded from `.env`
+  - **Restart Policy**: Always restart the container
+  - **Resource Limits**: Memory limit of `1G` and CPU limit of `1`
 
-## **Requisitos Previos**
+## Installation
 
-1. **Docker y Docker Compose** deben estar instalados.
-2. **Red compartida** (`caddy_network`) creada previamente:
+1. Clone the repository:
 
    ```bash
-   docker network create caddy_network
+   git clone https://github.com/yourusername/your-repo.git
    ```
 
-3. Asegúrate de que el servicio de **Postgres** esté levantado y accesible en la red `caddy_network`.
+2. Navigate to the project directory:
 
----
+   ```bash
+   cd your-repo
+   ```
 
-## **Configuración de Variables de Entorno**
+3. Start the services using Docker Compose:
 
-Las variables de entorno para este despliegue se definen en el archivo `.env.prod`. Algunas de las variables clave son:
+   ```bash
+   docker-compose up -d
+   ```
 
-### **`.env.prod`**
+## Usage
 
-```plaintext
-# Variables para PostgreSQL
-POSTGRES_USER=prod_user
-POSTGRES_PASSWORD=prod_password
-POSTGRES_DB=prod_db_n8n
+- Access n8n at [http://localhost:5678](http://localhost:5678) to create and manage your workflows.
 
-# Configuración de n8n
-DB_TYPE=postgresdb
-DB_POSTGRESDB_HOST=postgres
-DB_POSTGRESDB_PORT=5432
-DB_POSTGRESDB_DATABASE=prod_db_n8n
-DB_POSTGRESDB_USER=prod_user
-DB_POSTGRESDB_PASSWORD=prod_password
+## Contributing
 
-# Autenticación básica para n8n
-N8N_BASIC_AUTH_ACTIVE=true
-N8N_BASIC_AUTH_USER=prod_user
-N8N_BASIC_AUTH_PASSWORD=prod_password
+1. Fork the repository.
+2. Create a new branch:
 
-# Clave de cifrado para datos sensibles
-N8N_ENCRYPTION_KEY=tu_clave_de_cifrado_secreta
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
 
-# URL pública para webhooks de n8n
-N8N_URL=https://mi-dominio.com
+3. Make your changes and commit them:
 
-# Enforce permissions on settings file
-N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
-```
+   ```bash
+   git commit -m "Add your message"
+   ```
 
-> **Nota**: Asegúrate de proteger este archivo y no incluirlo en el control de versiones.
+4. Push to the branch:
 
----
+   ```bash
+   git push origin feature/YourFeature
+   ```
 
-## **Uso**
+5. Open a pull request.
 
-### **Levantar el servicio en producción**
+## License
 
-Para levantar **n8n** en producción, utiliza el siguiente comando:
-
-```bash
-docker-compose -f docker-compose.yml up -d
-```
-
-### **Detener el servicio**
-
-Para detener el servicio:
-
-```bash
-docker-compose -f docker-compose.yml down
-```
-
-### **Verificar el estado del contenedor**
-
-Para verificar que el contenedor de **n8n** está corriendo:
-
-```bash
-docker ps
-```
-
----
-
-## **Acceso a n8n**
-
-Puedes acceder a la interfaz web de **n8n** en `http://<tu_ip>:5678`. Para autenticarte, utiliza las credenciales definidas en el archivo `.env.prod`.
-
----
-
-## **Persistencia de Datos**
-
-Los datos de **n8n** se almacenan en el volumen `n8n_storage_prod`. Este volumen asegura que los datos no se pierdan al detener o reiniciar el contenedor.
-
-### **Ubicación del Volumen**
-
-El volumen se define en el archivo `docker-compose.yml` y es gestionado por Docker.
-
-Para eliminar los datos almacenados:
-
-```bash
-docker volume rm n8n_storage_prod
-```
-
-> **Advertencia**: Esto eliminará todos los flujos y configuraciones guardadas.
-
----
-
-## **Solución de Problemas**
-
-### **Error: `There was an error initializing DB`**
-
-- Verifica que las credenciales y el nombre de la base de datos en `.env.prod` sean correctos.
-- Asegúrate de que el servicio de **Postgres** esté en ejecución y accesible en la red `caddy_network`.
-
-### **Advertencia: `Permissions 0644 for n8n settings file are too wide`**
-
-- Asegúrate de que el archivo de configuración tenga permisos seguros:
-
-  ```bash
-  docker exec -it n8n_prod chmod 600 /home/node/.n8n/config
-  ```
-
-- Alternativamente, puedes configurar `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true` en `.env.prod`.
-
----
-
-## **Contribución**
-
-Si deseas mejorar esta configuración o agregar nuevas funcionalidades, sigue estos pasos:
-
-1. Haz un fork de este repositorio.
-2. Realiza tus cambios en una nueva rama.
-3. Envía un pull request con tus mejoras.
-
----
-
-## **Licencia**
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
