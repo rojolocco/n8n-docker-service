@@ -1,12 +1,10 @@
 services:
   n8n:
-    image: docker.n8n.io/n8nio/n8n
+    image: docker.n8n.io/n8nio/n8n:1.99.1
     container_name: auto
     restart: always
     env_file:
       - .env
-    # ports:
-    #   - "5678:5678"
     volumes:
       - n8n_data:/home/node/.n8n
     networks:
@@ -16,6 +14,12 @@ services:
         limits:
           memory: 1G
           cpus: "1"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/healthz"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
 
 volumes:
   n8n_data:
