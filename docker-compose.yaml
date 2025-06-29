@@ -1,7 +1,7 @@
 services:
   n8n:
     image: docker.n8n.io/n8nio/n8n:1.99.1
-    container_name: auto
+    container_name: n8n
     restart: always
     env_file:
       - .env
