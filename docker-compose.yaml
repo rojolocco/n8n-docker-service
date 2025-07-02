@@ -8,7 +8,7 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
     networks:
-      - caddy_network
+      - traefik_network
     deploy:
       resources:
         limits:
@@ -20,5 +20,5 @@ volumes:
     driver: local
 
 networks:
-  caddy_network:
+  traefik_network:
     external: true
