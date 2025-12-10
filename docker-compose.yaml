@@ -1,0 +1,24 @@
+services:
+  n8n:
+    image: n8nio/n8n:1.123.4
+    container_name: n8n
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - traefik_network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1"
+
+volumes:
+  n8n_data:
+    driver: local
+
+networks:
+  traefik_network:
+    external: true
